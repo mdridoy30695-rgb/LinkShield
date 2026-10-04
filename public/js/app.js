@@ -331,11 +331,12 @@ async function fetchAllData(isBackgroundPoll = false) {
     const user = getCurrentUser();
     const userIdQuery = user ? `?userId=${encodeURIComponent(user.id)}` : '';
 
-    const [statsRes, linksRes, walletRes, invoicesRes] = await Promise.all([
+    const [statsRes, linksRes, walletRes, invoicesRes, ticketsRes] = await Promise.all([
       fetch(`/api/stats${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false })),
       fetch(`/api/links${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false })),
       fetch(`/api/wallet${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false })),
-      fetch(`/api/invoices${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false }))
+      fetch(`/api/invoices${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false })),
+      fetch(`/api/tickets${userIdQuery}`).then(r => r.json()).catch(() => ({ success: false }))
     ]);
 
     if (statsRes.success && statsRes.data) {
@@ -348,6 +349,7 @@ async function fetchAllData(isBackgroundPoll = false) {
     if (linksRes.success) {
       appState.links = linksRes.data || [];
       appState.domains = linksRes.domains || [];
+      renderOverviewRecentLinks(appState.links);
       renderAllLinks(appState.links);
       renderDomains(appState.domains);
       populateDomainDropdown(appState.domains);
@@ -367,6 +369,13 @@ async function fetchAllData(isBackgroundPoll = false) {
       appState.invoices = invoicesRes.data || [];
       renderInvoices(appState.invoices);
     }
+
+    if (ticketsRes.success) {
+      renderTickets(ticketsRes.data || []);
+    }
+
+    renderNotifications();
+    renderProfile();
   } catch (err) {
     if (!isBackgroundPoll) console.error('Error fetching data:', err);
   }
@@ -382,6 +391,11 @@ function renderMetrics(data) {
   safeSetText('valMonthClicks', Number(data.monthClicks || 0).toLocaleString());
   safeSetText('valClicksLeft', Number(data.clicksLeft || 0).toLocaleString());
   safeSetText('sidebarClicksLeft', Number(data.clicksLeft || 0).toLocaleString());
+
+  // Analytics view metric cards
+  safeSetText('valAnalyticsTodayLinks', Number(data.todayClicks || 0).toLocaleString());
+  safeSetText('valAnalyticsYesterdayLinks', Number(data.yesterdayClicks || 0).toLocaleString());
+  safeSetText('valAnalyticsTotalLinks', Number(data.totalClicks || 0).toLocaleString());
 
   const used = Number(data.usedClicks || 0).toLocaleString();
   const limit = Number(data.clicksLimit || 500).toLocaleString();
@@ -428,9 +442,58 @@ function renderTopLinks(topLinks) {
           <button type="button" class="btn-copy-mini" onclick="copyToClipboard('${l.localUrl || l.shortUrl}')">Copy</button>
         </div>
       </td>
-      <td><strong style="color: #fff; font-size: 14px;">${Number(l.clicks || 0).toLocaleString()}</strong></td>
+      <td><strong style="color: #0f172a; font-size: 14px;">${Number(l.clicks || 0).toLocaleString()}</strong></td>
     </tr>
   `).join('');
+}
+
+// 7.1 Render Overview Recent Links
+function renderOverviewRecentLinks(links) {
+  const tbody = document.getElementById('overviewRecentLinksTableBody');
+  if (!tbody) return;
+
+  if (!links || links.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--muted); padding: 26px;">No links created yet. Click "+ Create New Link" to start your first campaign!</td></tr>`;
+    return;
+  }
+
+  const host = window.location.origin;
+  const recent = links.slice(0, 5);
+
+  tbody.innerHTML = recent.map(l => {
+    const fullShortUrl = `${host}/${l.slug}`;
+    const displayBrandedUrl = `https://${l.subdomain ? l.subdomain + '.' : ''}${l.domainName || 'linkshield.pro'}/${l.slug}`;
+
+    return `
+      <tr>
+        <td>
+          <div class="table-url-cell">
+            <span class="table-short-url" style="color: #b45309; font-weight: 700;">${escapeHtml(displayBrandedUrl)}</span>
+            <small style="color: var(--muted); font-size: 11px;">Slug: /${escapeHtml(l.slug)}</small>
+          </div>
+        </td>
+        <td>
+          <span style="color: #475569; font-size: 12.5px; max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${escapeHtml(l.targetUrl)}
+          </span>
+        </td>
+        <td>
+          <span style="font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(217, 119, 6, 0.12); color: #b45309; font-weight: 600;">
+            ${l.redirectMode === 'smart_shield' ? '🛡️ Smart Shield' : (l.redirectMode === 'bridge_page' ? '🌉 Bridge' : '⚡ 302')}
+          </span>
+        </td>
+        <td><strong style="color: #0f172a;">${Number(l.clicks || 0).toLocaleString()}</strong></td>
+        <td><span class="badge-status-active">● Active</span></td>
+        <td>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn-copy-mini" onclick="copyToClipboard('${fullShortUrl}')">Copy</button>
+            <a href="${fullShortUrl}" target="_blank" class="btn-copy-mini" style="text-decoration: none;">Visit</a>
+            <button type="button" class="btn-copy-mini" style="color: #ef4444;" onclick="deleteLink('${l.id}')">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 // 8. Render All Links
@@ -485,23 +548,124 @@ function renderAllLinks(links) {
 
 // 9. Render Domains List & Dropdown
 function renderDomains(domains) {
-  const tbody = document.getElementById('domainsTableBody');
+  const tbody = document.getElementById('yourDomainsTableBody') || document.getElementById('domainsTableBody');
   if (!tbody) return;
 
   if (!domains || domains.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 20px;">No platform domains configured.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--muted); padding: 20px;">No platform domains configured.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = domains.map(d => `
     <tr>
-      <td><strong style="color: #fff;">${escapeHtml(d.domain)}</strong></td>
-      <td><span class="badge-status-active">● Active</span></td>
-      <td><span style="color: #a1a1aa; font-size: 12px;">${d.isPrimary ? 'Primary Network Node' : 'Verified CDN Node'}</span></td>
-      <td><span style="color: #71717a; font-size: 12px;">${d.createdAt ? d.createdAt.slice(0, 10) : '2026-09-01'}</span></td>
-      <td><span style="color: #facc15; font-size: 12px; font-weight: 800;">✓ DNS Ready</span></td>
+      <td>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <strong style="color: #0f172a; font-size: 13.5px;">${escapeHtml(d.domain)}</strong>
+          ${d.isPrimary ? '<span style="font-size: 10px; background: rgba(217, 119, 6, 0.15); color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: 700;">DEFAULT</span>' : ''}
+        </div>
+      </td>
+      <td>
+        <span class="badge-status-active">● Active (DNS Ready)</span>
+      </td>
     </tr>
   `).join('');
+}
+
+// 9.1 Render Support Tickets
+function renderTickets(tickets) {
+  const tbody = document.getElementById('userTicketsTableBody');
+  if (!tbody) return;
+
+  if (!tickets || tickets.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 28px;">No support tickets opened yet. Need assistance? Click "+ Open New Ticket" above!</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = tickets.map(t => `
+    <tr>
+      <td><strong style="color: #b45309; font-size: 13px;">#${escapeHtml(t.id)}</strong></td>
+      <td>
+        <div>
+          <strong style="color: #0f172a; font-size: 13.5px;">${escapeHtml(t.subject)}</strong>
+          <p style="color: var(--muted); font-size: 12px; margin: 3px 0 0; line-height: 1.4;">${escapeHtml(t.message)}</p>
+        </div>
+      </td>
+      <td><span style="font-size: 11.5px; background: rgba(2, 132, 199, 0.12); color: #0284c7; padding: 3px 8px; border-radius: 6px; font-weight: 600;">${escapeHtml(t.category || 'General')}</span></td>
+      <td><span style="color: var(--muted); font-size: 12px;">${t.createdAt ? t.createdAt.replace('T', ' ').slice(0, 16) : '—'}</span></td>
+      <td>
+        <span class="${t.status === 'Closed' ? 'badge-status-pending' : 'badge-status-active'}">
+          ● ${escapeHtml(t.status || 'Open')}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// 9.2 Render Notifications
+function renderNotifications() {
+  const container = document.getElementById('userNotificationsContainer');
+  if (!container) return;
+
+  const stats = appState.stats || {};
+  const clicksLeft = stats.clicksLeft !== undefined ? stats.clicksLeft : 500;
+  const invoices = appState.invoices || [];
+
+  const items = [
+    {
+      title: "🛡️ Facebook Anti-Ban Protection 100% Active",
+      desc: "All crawler cloaking filters, Facebook external hit shields, and instant visitor redirects are operating normally.",
+      time: "Just now",
+      color: "#10b981"
+    },
+    {
+      title: `⚡ Clicks Balance: ${Number(clicksLeft).toLocaleString()} Clicks Remaining`,
+      desc: `Your account (${stats.activePlanName || 'Welcome Gift'}) has ${Number(clicksLeft).toLocaleString()} visitor clicks ready to redirect.`,
+      time: "Live Status",
+      color: "#f59e0b"
+    }
+  ];
+
+  if (invoices.length > 0) {
+    invoices.slice(0, 3).forEach(inv => {
+      const isPaid = (inv.status || '').toLowerCase() === 'paid';
+      items.push({
+        title: isPaid ? `✓ Invoice #${inv.id} Verified & Approved` : `⏳ Invoice #${inv.id} Under Admin Verification`,
+        desc: `Amount: BDT ${parseFloat(inv.amount || 0).toFixed(2)} via ${inv.method || 'bKash'} (TrxID: ${inv.trxId || 'N/A'}). ${isPaid ? 'Wallet/Plan credited.' : 'Admin is verifying your transaction.'}`,
+        time: inv.date ? inv.date.replace('T', ' ').slice(0, 16) : 'Recent',
+        color: isPaid ? "#10b981" : "#3b82f6"
+      });
+    });
+  }
+
+  container.innerHTML = items.map(n => `
+    <div style="display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: flex-start;">
+      <span style="color: ${n.color}; font-size: 16px; line-height: 1.2;">●</span>
+      <div style="flex: 1;">
+        <strong style="color: #0f172a; font-size: 14px; display: block;">${escapeHtml(n.title)}</strong>
+        <p style="color: var(--muted); font-size: 12.5px; margin-top: 3px; line-height: 1.4;">${escapeHtml(n.desc)}</p>
+        <small style="color: var(--subtext); font-size: 11px;">${n.time}</small>
+      </div>
+    </div>
+  `).join('');
+}
+
+// 9.3 Render User Profile
+function renderProfile() {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const nameInput = document.getElementById('profileFullName');
+  const emailInput = document.getElementById('profileEmail');
+  const phoneInput = document.getElementById('profilePhone');
+  const tierInput = document.getElementById('profileTier');
+
+  if (nameInput) nameInput.value = user.name || '';
+  if (emailInput) emailInput.value = user.email || '';
+  if (phoneInput) phoneInput.value = user.phone || '';
+  if (tierInput) {
+    const tierName = (user.activePlan && user.activePlan.name) || user.tier || 'Welcome Gift (Free Pack)';
+    tierInput.value = `${tierName} • Active`;
+  }
 }
 
 function populateDomainDropdown(domains) {
@@ -741,6 +905,114 @@ function setupForms() {
         (l.title && l.title.toLowerCase().includes(q))
       );
       renderAllLinks(filtered);
+    });
+  }
+
+  // User Profile Form
+  const userProfileForm = document.getElementById('userProfileForm');
+  if (userProfileForm) {
+    userProfileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = getCurrentUser();
+      if (!user) {
+        showQuickNotification('⚠️ Please log in to update your profile.');
+        return;
+      }
+      const name = document.getElementById('profileFullName')?.value.trim();
+      const phone = document.getElementById('profilePhone')?.value.trim();
+      const password = document.getElementById('profileNewPassword')?.value;
+
+      try {
+        const res = await fetch('/api/user/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, name, phone, password: password || undefined })
+        }).then(r => r.json());
+
+        if (res.success && res.user) {
+          const updatedUser = { ...user, ...res.user };
+          sessionStorage.setItem('linkshield_user', JSON.stringify(updatedUser));
+          appState.user = updatedUser;
+          showQuickNotification('✓ Profile updated successfully!');
+          renderProfile();
+          updateWalletUI();
+          const passInput = document.getElementById('profileNewPassword');
+          if (passInput) passInput.value = '';
+        } else {
+          showQuickNotification(`❌ ${res.error || 'Failed to update profile'}`);
+        }
+      } catch (err) {
+        showQuickNotification('❌ Error saving profile changes.');
+      }
+    });
+  }
+
+  // Create Ticket Form
+  const createTicketForm = document.getElementById('createTicketForm');
+  if (createTicketForm) {
+    createTicketForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = getCurrentUser();
+      const subject = document.getElementById('ticketSubject')?.value.trim();
+      const category = document.getElementById('ticketCategory')?.value;
+      const message = document.getElementById('ticketMessage')?.value.trim();
+
+      if (!subject || !message) {
+        showQuickNotification('⚠️ Please enter both subject and message.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/tickets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user ? user.id : 'usr_default_1', subject, category, message })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showQuickNotification('🎉 Ticket submitted successfully! Admin will respond.');
+          createTicketForm.reset();
+          const card = document.getElementById('newTicketFormCard');
+          if (card) card.style.display = 'none';
+          fetchAllData();
+        } else {
+          showQuickNotification(`❌ ${res.error || 'Failed to submit ticket'}`);
+        }
+      } catch (err) {
+        showQuickNotification('❌ Error submitting support ticket.');
+      }
+    });
+  }
+
+  // Toggle New Ticket Card
+  const btnToggleNewTicket = document.getElementById('btnToggleNewTicket');
+  const btnCloseNewTicket = document.getElementById('btnCloseNewTicket');
+  if (btnToggleNewTicket) {
+    btnToggleNewTicket.addEventListener('click', () => {
+      const card = document.getElementById('newTicketFormCard');
+      if (card) {
+        const isHidden = card.style.display === 'none' || !card.style.display;
+        card.style.display = isHidden ? 'block' : 'none';
+        if (isHidden) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          document.getElementById('ticketSubject')?.focus();
+        }
+      }
+    });
+  }
+  if (btnCloseNewTicket) {
+    btnCloseNewTicket.addEventListener('click', () => {
+      const card = document.getElementById('newTicketFormCard');
+      if (card) card.style.display = 'none';
+    });
+  }
+
+  // Refresh Notifications Button
+  const btnRefreshNotifications = document.getElementById('btnRefreshNotifications');
+  if (btnRefreshNotifications) {
+    btnRefreshNotifications.addEventListener('click', () => {
+      renderNotifications();
+      showQuickNotification('✓ Notifications refreshed.');
     });
   }
 }
@@ -985,10 +1257,14 @@ function setupAuth() {
         });
         const data = await res.json();
         if (data.success && data.user) {
+          const alertBox = document.getElementById('loginAlertMessage');
+          if (alertBox) alertBox.style.display = 'none';
+
           sessionStorage.setItem('linkshield_user', JSON.stringify(data.user));
+          sessionStorage.setItem('linkshield_logged_in', 'true');
           appState.user = data.user;
           window.enterDashboard();
-          showQuickNotification(`Welcome back, ${data.user.name || 'Member'}!`);
+          showQuickNotification(`🎉 Welcome back, ${data.user.name || 'Member'}!`);
           fetchAllData();
         } else {
           showQuickNotification(`❌ ${data.error || 'Login failed. Please check credentials.'}`);
@@ -999,7 +1275,7 @@ function setupAuth() {
     });
   }
 
-  // Register handler (Auto-starts with 500 visitor clicks, 1 short link, 7 days validity)
+  // Register handler (Redirects to Login requiring user to enter password)
   if (authRegisterForm) {
     authRegisterForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1029,11 +1305,33 @@ function setupAuth() {
         });
         const data = await res.json();
         if (data.success && data.user) {
-          sessionStorage.setItem('linkshield_user', JSON.stringify(data.user));
-          appState.user = data.user;
-          window.enterDashboard();
-          showQuickNotification(`🎉 Welcome ${data.user.name}! Your 500 Visitor Clicks Welcome Gift is active!`);
-          fetchAllData();
+          // Reset registration form
+          authRegisterForm.reset();
+
+          // Switch to Login Tab
+          window.switchAuthTab('login');
+
+          // Autofill registered email into login identifier
+          const loginIdent = document.getElementById('loginIdentifier');
+          if (loginIdent) {
+            loginIdent.value = email;
+          }
+
+          // Clear and focus password field
+          const loginPass = document.getElementById('loginPassword');
+          if (loginPass) {
+            loginPass.value = '';
+            loginPass.focus();
+          }
+
+          // Show prominent alert box above login fields
+          const alertBox = document.getElementById('loginAlertMessage');
+          if (alertBox) {
+            alertBox.style.display = 'block';
+            alertBox.innerHTML = `✅ <strong>রেজিস্ট্রেশন সফল হয়েছে!</strong><br>আপনার একাউন্ট তৈরি হয়ে গেছে। ড্যাশবোর্ডে প্রবেশ করতে অনুগ্রহ করে আপনার পাসওয়ার্ড দিয়ে লগইন করুন।`;
+          }
+
+          showQuickNotification('🎉 রেজিস্ট্রেশন সফল হয়েছে! পাসওয়ার্ড দিয়ে লগইন করুন।');
         } else {
           showQuickNotification(`❌ ${data.error || 'Registration failed.'}`);
         }
@@ -1055,16 +1353,12 @@ function setupAuth() {
   if (sidebarLogoutBtn) sidebarLogoutBtn.addEventListener('click', handleLogout);
 
   const stored = sessionStorage.getItem('linkshield_logged_in');
-  if (stored) {
-    if (!sessionStorage.getItem('linkshield_user')) {
-      fetch('/api/auth/demo-login', { method: 'POST' }).then(r => r.json()).then(res => {
-        if (res.success && res.user) {
-          sessionStorage.setItem('linkshield_user', JSON.stringify(res.user));
-          appState.user = res.user;
-          fetchAllData();
-        }
-      }).catch(() => {});
-    }
+  const storedUser = sessionStorage.getItem('linkshield_user');
+  if (stored && storedUser) {
+    try {
+      appState.user = JSON.parse(storedUser);
+      fetchAllData();
+    } catch(e) {}
     window.enterDashboard();
   } else {
     window.returnToLandingHome();

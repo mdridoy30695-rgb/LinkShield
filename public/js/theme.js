@@ -7,11 +7,11 @@
 
   function getSavedTheme() {
     const saved = localStorage.getItem('linkshield_theme');
-    if (saved === 'light' || saved === 'dark') {
-      return saved;
+    if (saved === 'dark') {
+      return 'dark';
     }
-    // Default to 'dark' mode as requested
-    return 'dark';
+    // Default strictly to pristine 'light' mode for all visitors
+    return 'light';
   }
 
   function applyTheme(theme) {

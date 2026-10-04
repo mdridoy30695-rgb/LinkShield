@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,7 +65,7 @@
           <span class="theme-switch-icon moon-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </span>
-          <span class="theme-switch-label">Dark</span>
+          <span class="theme-switch-label">Light</span>
         </button>
 
         <button type="button" class="btn-action-dark" onclick="openAuthModal('login')">Login</button>
@@ -306,6 +306,7 @@
       <!-- LOGIN VIEW -->
       <div id="viewSplitLogin" class="neu-form-view">
         <form id="authLoginForm">
+          <div id="loginAlertMessage" style="display: none; background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.45); color: #047857; padding: 12px 14px; border-radius: 12px; font-size: 13px; margin-bottom: 16px; text-align: center; line-height: 1.5; font-weight: 500;"></div>
           <div class="neu-input-group">
             <div class="neu-input-wrap">
               <span class="neu-input-icon">
@@ -727,8 +728,32 @@
               <div class="metric-sub">Backup clicks</div>
             </div>
           </div>
-              <div class="metric-value">0</div>
-              <div class="metric-sub">Backup clicks</div>
+
+          <!-- Overview: Recent Links Table & Quick Actions -->
+          <div class="table-card-container" style="margin-top: 24px;">
+            <div class="table-head-info" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="font-size: 17px; font-weight: 900; color: #0f172a;">Your Recent Links</h3>
+                <p style="font-size: 12px; color: var(--subtext); margin-top: 2px;">Recently shortened links with anti-ban cloaking and live clicks.</p>
+              </div>
+              <button class="btn-action-white" data-view="create-link" style="height: 36px; padding: 0 16px; font-size: 12.5px;">+ Create New Link</button>
+            </div>
+            <div class="table-responsive">
+              <table class="shield-table">
+                <thead>
+                  <tr>
+                    <th>SHORT URL</th>
+                    <th>DESTINATION</th>
+                    <th>MODE</th>
+                    <th>CLICKS</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewRecentLinksTableBody">
+                  <!-- Populated by app.js -->
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -872,8 +897,8 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
               </div>
               <div class="metric-label">TODAY TOP LINKS</div>
-              <div class="metric-value">4</div>
-              <div class="metric-sub">Top 10 by today clicks</div>
+              <div class="metric-value" id="valAnalyticsTodayLinks">0</div>
+              <div class="metric-sub">Top links by today clicks</div>
             </div>
 
             <div class="metric-card">
@@ -881,8 +906,8 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
               </div>
               <div class="metric-label">YESTERDAY TOP LINKS</div>
-              <div class="metric-value">4</div>
-              <div class="metric-sub">Top 10 by yesterday clicks</div>
+              <div class="metric-value" id="valAnalyticsYesterdayLinks">0</div>
+              <div class="metric-sub">Top links by yesterday clicks</div>
             </div>
 
             <div class="metric-card">
@@ -890,8 +915,8 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
               </div>
               <div class="metric-label">ALL TIME TOP LINKS</div>
-              <div class="metric-value">4</div>
-              <div class="metric-sub">Top 10 by total clicks</div>
+              <div class="metric-value" id="valAnalyticsTotalLinks">0</div>
+              <div class="metric-sub">Top links by total clicks</div>
             </div>
           </div>
 
@@ -1192,18 +1217,14 @@
           <div class="page-title-row">
             <div>
               <h1 class="page-title">Notifications</h1>
-              <p class="page-subtitle">Latest system updates, plan renewals and security notices.</p>
+              <p class="page-subtitle">Real-time alerts, plan status, approvals, and security updates.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-action-dark" id="btnRefreshNotifications" style="font-size: 12.5px; height: 36px; padding: 0 16px;">↻ Refresh</button>
             </div>
           </div>
-          <div class="form-card-container">
-            <div style="display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="color: #34d399; font-size: 18px;">●</span>
-              <div>
-                <strong style="color: #0f172a; font-size: 14px; display: block;">System Synchronized Successfully</strong>
-                <p style="color: var(--muted); font-size: 12px; margin-top: 2px;">Your Growth Pack has 31,283 clicks remaining. All short link cloaks are 100% active.</p>
-                <small style="color: var(--subtext); font-size: 10.5px;">Today at 1:45 PM</small>
-              </div>
-            </div>
+          <div class="form-card-container" id="userNotificationsContainer">
+            <!-- Dynamically injected via app.js -->
           </div>
         </section>
 
@@ -1211,19 +1232,68 @@
         <section id="view-tickets" class="page-view">
           <div class="page-title-row">
             <div>
-              <h1 class="page-title">Tickets</h1>
-              <p class="page-subtitle">Support tickets, domain approval inquiries and billing questions.</p>
+              <h1 class="page-title">Support Tickets</h1>
+              <p class="page-subtitle">Submit inquiries about custom domains, billing, and anti-ban cloaking.</p>
             </div>
             <div class="page-actions">
-              <button class="btn-action-white" onclick="alert('Please contact Telegram Support @codeXadmin for instant priority response.')">+ New Ticket</button>
+              <button class="btn-action-white" id="btnToggleNewTicket" style="height: 38px; padding: 0 18px; font-size: 13px;">+ Open New Ticket</button>
             </div>
           </div>
+
+          <!-- New Ticket Card (Collapsible) -->
+          <div id="newTicketFormCard" class="form-card-container" style="display: none; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 16.5px; font-weight: 800; color: #0f172a;">Open Support Ticket</h3>
+              <button type="button" class="btn-copy-mini" id="btnCloseNewTicket">✕ Close</button>
+            </div>
+            <form id="createTicketForm">
+              <div class="form-row-2col">
+                <div>
+                  <label>Subject</label>
+                  <input type="text" id="ticketSubject" class="input-text-dark" placeholder="e.g. Domain Approval / Payment Issue" required>
+                </div>
+                <div>
+                  <label>Category</label>
+                  <select id="ticketCategory" class="domains-select-styled">
+                    <option value="Billing / Payment">Billing / Payment</option>
+                    <option value="Domain Approval">Domain Approval</option>
+                    <option value="Anti-Ban Cloaking">Anti-Ban Cloaking</option>
+                    <option value="Technical Support">Technical Support</option>
+                    <option value="Other">Other Inquiry</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group-item" style="margin-top: 14px;">
+                <label>Message Details</label>
+                <textarea id="ticketMessage" class="input-text-dark" rows="4" placeholder="Describe your request or issue in detail..." required style="resize: vertical;"></textarea>
+              </div>
+              <button type="submit" class="btn-action-dark" id="btnSubmitTicket" style="margin-top: 12px; height: 40px; padding: 0 24px;">
+                <span>Submit Ticket</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Tickets Table -->
           <div class="table-card-container">
             <div class="table-head-info">
               <h3 style="font-size: 17px; font-weight: 900; color: #0f172a;">Your Support Inquiries</h3>
+              <p style="font-size: 12px; color: var(--subtext); margin-top: 2px;">Track status and replies from administration.</p>
             </div>
-            <div style="padding: 24px; color: var(--muted); text-align: center; font-size: 13px;">
-              No open tickets. Need instant assistance? Use the floating Telegram support widget!
+            <div class="table-responsive">
+              <table class="shield-table">
+                <thead>
+                  <tr>
+                    <th>TICKET ID</th>
+                    <th>SUBJECT</th>
+                    <th>CATEGORY</th>
+                    <th>DATE</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="userTicketsTableBody">
+                  <!-- Populated via app.js -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1232,24 +1302,37 @@
         <section id="view-profile" class="page-view">
           <div class="page-title-row">
             <div>
-              <h1 class="page-title">Profile</h1>
-              <p class="page-subtitle">Account credentials, phone number and subscription tier.</p>
+              <h1 class="page-title">Profile &amp; Account Settings</h1>
+              <p class="page-subtitle">Manage your personal credentials, contact mobile and security.</p>
             </div>
           </div>
-          <div class="form-card-container" style="max-width: 600px;">
-            <div class="form-group-item">
-              <label>Full Name</label>
-              <input type="text" class="input-text-dark" value="MD Rifat" readonly>
-            </div>
-            <div class="form-group-item">
-              <label>Registered Mobile Number</label>
-              <input type="text" class="input-text-dark" value="01952320805" readonly>
-            </div>
-            <div class="form-group-item">
-              <label>Account Tier</label>
-              <input type="text" class="input-text-dark" value="GROWTH PACK (Active)" readonly>
-            </div>
-            <button class="btn-action-white" style="margin-top: 10px;" onclick="alert('Profile is up to date.')">Save Changes</button>
+          <div class="form-card-container" style="max-width: 650px;">
+            <form id="userProfileForm">
+              <div class="form-group-item">
+                <label>Full Name</label>
+                <input type="text" id="profileFullName" class="input-text-dark" placeholder="Enter your full name" required>
+              </div>
+              <div class="form-group-item">
+                <label>Registered Email Address</label>
+                <input type="email" id="profileEmail" class="input-text-dark" placeholder="name@gmail.com" readonly style="opacity: 0.75; cursor: not-allowed;">
+                <small style="color: var(--muted); font-size: 11px;">Primary login identity (read-only).</small>
+              </div>
+              <div class="form-group-item">
+                <label>Contact Mobile Number (bKash/Nagad verification)</label>
+                <input type="tel" id="profilePhone" class="input-text-dark" placeholder="e.g. 017XXXXXXXX">
+              </div>
+              <div class="form-group-item">
+                <label>Subscription Tier &amp; Active Plan</label>
+                <input type="text" id="profileTier" class="input-text-dark" readonly style="opacity: 0.85; font-weight: 700; color: #b45309;">
+              </div>
+              <div class="form-group-item">
+                <label>New Password (leave empty to keep current password)</label>
+                <input type="password" id="profileNewPassword" class="input-text-dark" placeholder="Minimum 4 characters">
+              </div>
+              <button type="submit" class="btn-action-white" id="btnSaveProfile" style="margin-top: 14px; height: 42px; padding: 0 24px;">
+                <span>Save Profile Changes</span>
+              </button>
+            </form>
           </div>
         </section>
 

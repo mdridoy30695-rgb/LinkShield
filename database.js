@@ -1034,6 +1034,33 @@ const db = {
   getSettings() {
     const data = readDB();
     return data.settings || {};
+  },
+
+  // Support Tickets
+  getTickets(userId) {
+    const data = readDB();
+    data.tickets = data.tickets || [];
+    if (userId) {
+      return data.tickets.filter(t => t.userId === userId);
+    }
+    return data.tickets;
+  },
+
+  createTicket(userId, ticketData) {
+    const data = readDB();
+    data.tickets = data.tickets || [];
+    const newTicket = {
+      id: 'tkt_' + generateId(6),
+      userId: userId || 'usr_default_1',
+      subject: ticketData.subject || 'Support Inquiry',
+      category: ticketData.category || 'General',
+      message: ticketData.message || '',
+      status: 'Open',
+      createdAt: new Date().toISOString()
+    };
+    data.tickets.unshift(newTicket);
+    writeDB(data);
+    return newTicket;
   }
 };
 

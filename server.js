@@ -117,6 +117,82 @@ app.post('/api/auth/demo-login', (req, res) => {
   }
 });
 
+// User Profile Management
+app.get('/api/user/profile', (req, res) => {
+  try {
+    const userId = req.query.userId;
+    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+    const users = db.getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return res.status(404).json({ success: false, error: 'User not found' });
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        tier: user.tier || 'FREE PACK',
+        walletBalance: user.walletBalance || 0,
+        activePlan: user.activePlan || {}
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/user/profile', (req, res) => {
+  try {
+    const { userId, name, phone, password } = req.body;
+    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+    const updates = {};
+    if (name) updates.name = name;
+    if (phone !== undefined) updates.phone = phone;
+    if (password && password.length >= 4) updates.password = password;
+    const updated = db.updateUser(userId, updates);
+    res.json({
+      success: true,
+      user: {
+        id: updated.id,
+        name: updated.name,
+        email: updated.email,
+        phone: updated.phone || '',
+        tier: updated.tier || 'FREE PACK',
+        walletBalance: updated.walletBalance || 0,
+        activePlan: updated.activePlan || {}
+      },
+      message: 'Profile updated successfully'
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Support Tickets API
+app.get('/api/tickets', (req, res) => {
+  try {
+    const userId = req.query.userId || null;
+    const tickets = db.getTickets(userId);
+    res.json({ success: true, data: tickets });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/tickets', (req, res) => {
+  try {
+    const { userId, subject, category, message } = req.body;
+    if (!subject || !message) {
+      return res.status(400).json({ success: false, error: 'Subject and message are required' });
+    }
+    const ticket = db.createTicket(userId, { subject, category, message });
+    res.json({ success: true, data: ticket, message: 'Ticket submitted successfully' });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
 // 0. Public Settings & Dynamic Plans
 app.get('/api/settings', (req, res) => {
   try {
