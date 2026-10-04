@@ -1,0 +1,555 @@
+{
+  "settings": {
+    "appName": "LinkShield Pro",
+    "primaryHost": "localhost:4000",
+    "defaultRedirectMode": "smart_shield",
+    "noticeText": "⚡ Live Notice: Facebook Anti-Ban Protection is 100% Active!",
+    "supportPhone": "+8801952320805",
+    "supportEmail": "support@linkshield.pro",
+    "bkashNumber": "01952320805 (Personal)",
+    "nagadNumber": "01952320805 (Personal)",
+    "rocketNumber": "01952320805 (Personal)",
+    "paymentInstructions": "অনুগ্রহ করে নির্ধারিত নাম্বারে Send Money করুন এবং প্রেরিত নাম্বার ও Transaction ID (TrxID) দিয়ে সাবমিট করুন। এডমিন ভেরিফাই করে এপ্রুভ করলেই আপনার প্ল্যান চালু হয়ে যাবে।",
+    "defaultFreeClicks": 500
+  },
+  "plans": [
+    {
+      "id": "plan_welcome_free",
+      "name": "Welcome Gift",
+      "clicks": 500,
+      "price": 0,
+      "durationDays": 7,
+      "maxLinks": 1,
+      "isFree": true,
+      "isActive": true,
+      "badge": "FREE PACK",
+      "features": [
+        "500 Visitor Clicks",
+        "1 Active Short Link",
+        "7 Days Validity",
+        "Realtime Analytics",
+        "Anti-Ban Facebook Shield"
+      ]
+    },
+    {
+      "id": "plan_starter_pack",
+      "name": "Starter Pack",
+      "clicks": 10000,
+      "price": 49,
+      "durationDays": 30,
+      "maxLinks": 10,
+      "isFree": false,
+      "isActive": true,
+      "badge": "POPULAR",
+      "features": [
+        "10,000 Visitor Clicks",
+        "10 Custom Subdomain Links",
+        "30 Days Validity",
+        "Subdomain Routing",
+        "VIP Cloaking Filter"
+      ]
+    },
+    {
+      "id": "plan_growth_pack",
+      "name": "Growth Pack",
+      "clicks": 50000,
+      "price": 149,
+      "durationDays": 30,
+      "maxLinks": 50,
+      "isFree": false,
+      "isActive": true,
+      "badge": "BEST VALUE",
+      "features": [
+        "50,000 Visitor Clicks",
+        "50 Custom Subdomain Links",
+        "30 Days Validity",
+        "Instant 302 Bypass",
+        "Geo & Device Tracking"
+      ]
+    },
+    {
+      "id": "plan_pro_pack",
+      "name": "Pro Pack",
+      "clicks": 100000,
+      "price": 249,
+      "durationDays": 60,
+      "maxLinks": 150,
+      "isFree": false,
+      "isActive": true,
+      "badge": "POWER USER",
+      "features": [
+        "100,000 Visitor Clicks",
+        "150 Custom Links",
+        "60 Days Validity",
+        "Custom Domains DNS",
+        "Priority Bot Protection"
+      ]
+    },
+    {
+      "id": "plan_vip_enterprise",
+      "name": "VIP Enterprise",
+      "clicks": 500000,
+      "price": 499,
+      "durationDays": 365,
+      "maxLinks": 1000,
+      "isFree": false,
+      "isActive": true,
+      "badge": "1 YEAR VIP",
+      "features": [
+        "500,000 Visitor Clicks",
+        "Unlimited Links",
+        "365 Days Validity (1 Year)",
+        "Dedicated IP Routing",
+        "24/7 Priority Support"
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "id": "domain_linkshield_pro",
+      "domain": "linkshield.pro",
+      "status": "active",
+      "isPrimary": true,
+      "tierRequired": "all",
+      "createdAt": "2026-09-03T16:58:28.114Z"
+    },
+    {
+      "id": "domain_linkshield_link",
+      "domain": "linkshield.link",
+      "status": "active",
+      "isPrimary": false,
+      "tierRequired": "all",
+      "createdAt": "2026-09-05T10:00:00.000Z"
+    },
+    {
+      "id": "domain_linkshield_vip",
+      "domain": "linkshield.vip",
+      "status": "active",
+      "isPrimary": false,
+      "tierRequired": "vip",
+      "createdAt": "2026-09-10T12:00:00.000Z"
+    },
+    {
+      "id": "domain_default",
+      "domain": "localhost:4000",
+      "status": "active",
+      "isPrimary": false,
+      "tierRequired": "all",
+      "createdAt": "2026-09-03T16:58:28.114Z"
+    }
+  ],
+  "links": [
+    {
+      "id": "link_mushtw8e_pe33z",
+      "userId": "usr_mushtw7q_otb3b",
+      "slug": "qw33Em",
+      "subdomain": "qw33Em",
+      "targetUrl": "https://example.com/1",
+      "title": "Special Offer Deal",
+      "description": "Click here to view verified promotion details.",
+      "imageUrl": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "all",
+      "redirectMode": "smart_shield",
+      "bridgeDelay": 0,
+      "isActive": true,
+      "clicks": 0,
+      "todayClicks": 0,
+      "yesterdayClicks": 0,
+      "createdAt": "2026-10-03T14:34:41.390Z",
+      "updatedAt": "2026-10-03T14:34:41.390Z"
+    },
+    {
+      "id": "link_mushtlf5_m63c6",
+      "userId": "usr_mushtldm_akqal",
+      "slug": "erwbAT",
+      "subdomain": "deal7177",
+      "targetUrl": "https://example.com/target-landing",
+      "title": "Top Deal",
+      "description": "Click here to view verified promotion details.",
+      "imageUrl": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "domain_linkshield_pro",
+      "redirectMode": "direct_302",
+      "bridgeDelay": 0,
+      "isActive": true,
+      "clicks": 1,
+      "todayClicks": 0,
+      "yesterdayClicks": 0,
+      "createdAt": "2026-10-03T14:34:27.377Z",
+      "updatedAt": "2026-10-03T14:34:27.377Z"
+    },
+    {
+      "id": "link_mushrmvu_gul2y",
+      "userId": "usr_default_1",
+      "slug": "2PbH52",
+      "subdomain": "deal5741",
+      "targetUrl": "https://example.com/target-landing",
+      "title": "Top Deal",
+      "description": "Click here to view verified promotion details.",
+      "imageUrl": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "domain_linkshield_pro",
+      "redirectMode": "direct_302",
+      "bridgeDelay": 0,
+      "isActive": true,
+      "clicks": 1,
+      "todayClicks": 0,
+      "yesterdayClicks": 0,
+      "createdAt": "2026-10-03T14:32:55.962Z",
+      "updatedAt": "2026-10-03T14:32:55.962Z"
+    },
+    {
+      "id": "link_bn4zu",
+      "userId": "usr_default_1",
+      "slug": "cpa-deal",
+      "subdomain": "offer",
+      "targetUrl": "https://example.com/cpa-special-offer",
+      "title": "🔥 Exclusive Limited Deal - 50% Off",
+      "description": "Claim your high-converting discount offer today.",
+      "imageUrl": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "domain_linkshield_pro",
+      "redirectMode": "smart_shield",
+      "bridgeDelay": 2,
+      "isActive": true,
+      "clicks": 2306,
+      "createdAt": "2026-09-15T10:00:00.000Z"
+    },
+    {
+      "id": "link_special",
+      "userId": "usr_default_1",
+      "slug": "special-offer",
+      "subdomain": "vip",
+      "targetUrl": "https://example.com/exclusive-landing",
+      "title": "⚡ Instant VIP Cash Bonus Claim",
+      "description": "Click to unlock verified reward program.",
+      "imageUrl": "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "domain_linkshield_link",
+      "redirectMode": "bridge_page",
+      "bridgeDelay": 2,
+      "isActive": true,
+      "clicks": 1100,
+      "createdAt": "2026-09-20T12:00:00.000Z"
+    }
+  ],
+  "clicks": [
+    {
+      "id": "c_mushtlfp_xernu",
+      "linkId": "link_mushtlf5_m63c6",
+      "userId": "usr_mushtldm_akqal",
+      "slug": "erwbAT",
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "device": "Desktop",
+      "isBot": false,
+      "botName": null,
+      "referrer": "Direct / Masked",
+      "date": "2026-10-03",
+      "timestamp": "2026-10-03T14:34:27.397Z"
+    },
+    {
+      "id": "c_mushrmwg_f6obs",
+      "linkId": "link_mushrmvu_gul2y",
+      "userId": "usr_default_1",
+      "slug": "2PbH52",
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "device": "Desktop",
+      "isBot": false,
+      "botName": null,
+      "referrer": "Direct / Masked",
+      "date": "2026-10-03",
+      "timestamp": "2026-10-03T14:32:55.984Z"
+    },
+    {
+      "id": "c_mulgzzqy_hi2sd",
+      "linkId": "link_bn4zu",
+      "slug": "cpa-deal",
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+      "device": "Desktop",
+      "isBot": false,
+      "botName": null,
+      "referrer": "Direct / Masked",
+      "timestamp": "2026-09-28T16:37:03.034Z"
+    },
+    {
+      "id": "c_mtlrri5m_87wb6",
+      "linkId": "link_special",
+      "slug": "special-offer",
+      "ip": "::1",
+      "userAgent": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+      "device": "Social Bot",
+      "isBot": true,
+      "botName": "Facebook Crawler",
+      "referrer": "Facebook Crawler",
+      "timestamp": "2026-09-25T16:58:40.427Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "admin_airana_1713",
+      "name": "Super Admin (Airana)",
+      "email": "airana1713@admin",
+      "password": "admin",
+      "role": "admin",
+      "tier": "SUPER ADMIN",
+      "avatarInitials": "SA",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Super Admin",
+        "clicksLeft": 9999999,
+        "usedClicks": 0,
+        "clicksLimit": 9999999,
+        "freeClicks": 0,
+        "emergencyClicks": 0,
+        "purchasedAt": "2026-09-01T00:00:00.000Z"
+      },
+      "createdAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "usr_default_1",
+      "name": "MD Rifat",
+      "email": "mdrifat1234gsh@gmail.com",
+      "password": "password123",
+      "role": "user",
+      "tier": "GROWTH PACK",
+      "avatarInitials": "MD",
+      "walletBalance": 298,
+      "status": "Active",
+      "activePlan": {
+        "name": "Growth Pack",
+        "clicksLeft": 41283,
+        "usedClicks": 18717,
+        "clicksLimit": 50000
+      },
+      "createdAt": "2026-09-03T17:25:18.250Z"
+    },
+    {
+      "id": "usr_mtlsqcg1_rp0tv",
+      "name": "Alex Morgan",
+      "email": "alex@adspx.com",
+      "password": "secretpassword",
+      "role": "user",
+      "tier": "VIP ENTERPRISE",
+      "avatarInitials": "AM",
+      "walletBalance": 20,
+      "status": "Active",
+      "activePlan": {
+        "name": "Starter Tier",
+        "clicksLeft": 8420,
+        "usedClicks": 1580,
+        "clicksLimit": 10000,
+        "durationDays": 60,
+        "expiresAt": "2026-11-29T05:42:58.512Z"
+      },
+      "createdAt": "2026-09-03T17:25:45.985Z"
+    },
+    {
+      "id": "usr_munp8k24_t8si0",
+      "name": "Tanvir Ahmed",
+      "email": "tanvir.test@gmail.com",
+      "password": "testpassword123",
+      "role": "user",
+      "tier": "STARTER TIER",
+      "avatarInitials": "TA",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Starter Free Pack",
+        "clicksLeft": 1000,
+        "usedClicks": 0,
+        "clicksLimit": 1000,
+        "durationDays": 30,
+        "expiresAt": "2026-10-30T06:03:11.884Z"
+      },
+      "createdAt": "2026-09-30T06:03:11.884Z"
+    },
+    {
+      "id": "usr_mushrmuk_tl084",
+      "name": "Test Affiliate",
+      "email": "user_1791037975741@test.com",
+      "password": "password123",
+      "role": "user",
+      "tier": "FREE TIER",
+      "avatarInitials": "TA",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Welcome Gift",
+        "clicksLeft": 500,
+        "usedClicks": 0,
+        "clicksLimit": 500,
+        "maxLinks": 1,
+        "durationDays": 7,
+        "purchasedAt": "2026-10-03T14:32:55.916Z",
+        "expiresAt": "2026-10-10T14:32:55.916Z"
+      },
+      "createdAt": "2026-10-03T14:32:55.916Z"
+    },
+    {
+      "id": "usr_mushtldm_akqal",
+      "name": "Pro Marketer",
+      "email": "user_1791038067177@test.com",
+      "password": "password123",
+      "role": "user",
+      "tier": "GROWTH PACK",
+      "avatarInitials": "PM",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Growth Pack",
+        "clicksLeft": 50499,
+        "usedClicks": 1,
+        "clicksLimit": 50500,
+        "durationDays": 30,
+        "maxLinks": 50,
+        "purchasedAt": "2026-10-03T14:34:27.498Z",
+        "expiresAt": "2026-11-09T14:34:27.322Z"
+      },
+      "createdAt": "2026-10-03T14:34:27.322Z"
+    },
+    {
+      "id": "usr_mushtw7q_otb3b",
+      "name": "Free User",
+      "email": "free_1791038081235@test.com",
+      "password": "password123",
+      "role": "user",
+      "tier": "FREE TIER",
+      "avatarInitials": "FU",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Welcome Gift",
+        "clicksLeft": 500,
+        "usedClicks": 0,
+        "clicksLimit": 500,
+        "maxLinks": 1,
+        "durationDays": 7,
+        "purchasedAt": "2026-10-03T14:34:41.366Z",
+        "expiresAt": "2026-10-10T14:34:41.366Z"
+      },
+      "createdAt": "2026-10-03T14:34:41.366Z"
+    },
+    {
+      "id": "usr_musi8ayw_t4gs8",
+      "name": "New Member",
+      "email": "usr_guest_753671@linkshield.pro",
+      "password": "guest1234",
+      "role": "user",
+      "tier": "GROWTH PACK",
+      "avatarInitials": "NM",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Growth Pack",
+        "clicksLeft": 50500,
+        "usedClicks": 0,
+        "clicksLimit": 50500,
+        "durationDays": 30,
+        "maxLinks": 50,
+        "purchasedAt": "2026-10-03T14:45:53.808Z",
+        "expiresAt": "2026-11-09T14:45:53.672Z"
+      },
+      "createdAt": "2026-10-03T14:45:53.672Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-753781",
+      "userId": "usr_musi8ayw_t4gs8",
+      "userName": "New Member",
+      "userEmail": "usr_guest_753671@linkshield.pro",
+      "planId": "plan_growth_pack",
+      "planName": "Growth Pack (50,000 Clicks)",
+      "amount": 149,
+      "method": "bKash",
+      "senderNumber": "01912345678",
+      "trxId": "TRX8753678",
+      "status": "Paid",
+      "date": "2026-10-03T14:45:53.781Z",
+      "approvedAt": "2026-10-03T14:45:53.808Z"
+    },
+    {
+      "id": "INV-223656",
+      "userId": "usr_guest",
+      "userName": "Customer",
+      "userEmail": "Unknown",
+      "planId": "plan_starter_pack",
+      "planName": "Starter Pack (10,000 Clicks)",
+      "amount": 49,
+      "method": "bKash",
+      "senderNumber": "0156756756",
+      "trxId": "SDSFRWERR",
+      "status": "Pending",
+      "date": "2026-10-03T14:37:03.656Z"
+    },
+    {
+      "id": "INV-067487",
+      "userId": "usr_mushtldm_akqal",
+      "userName": "Pro Marketer",
+      "userEmail": "user_1791038067177@test.com",
+      "planId": "plan_growth_pack",
+      "planName": "Growth Pack (50,000 Clicks)",
+      "amount": 149,
+      "method": "bKash",
+      "senderNumber": "01711223344",
+      "trxId": "BK38067177",
+      "status": "Paid",
+      "date": "2026-10-03T14:34:27.487Z",
+      "approvedAt": "2026-10-03T14:34:27.498Z"
+    },
+    {
+      "id": "INV-976056",
+      "userId": "usr_mushrmuk_tl084",
+      "userName": "Test Affiliate",
+      "userEmail": "user_1791037975741@test.com",
+      "planId": "plan_growth_pack",
+      "planName": "Growth Pack (50,000 Clicks)",
+      "amount": 149,
+      "method": "bKash",
+      "senderNumber": "01711223344",
+      "trxId": "BK37975741",
+      "status": "Pending",
+      "date": "2026-10-03T14:32:56.057Z"
+    },
+    {
+      "id": "INV-73978",
+      "planName": "Starter Pack (10,000 Clicks)",
+      "amount": 49,
+      "method": "Wallet Balance",
+      "trxId": "WLTMUSH37QT",
+      "status": "Paid",
+      "date": "2026-10-03T14:13:56.597Z"
+    },
+    {
+      "id": "INV-55990",
+      "planName": "Starter Pack (10,000 Clicks)",
+      "amount": 49,
+      "method": "Wallet Balance",
+      "trxId": "WLTMUNQTEHG",
+      "status": "Paid",
+      "date": "2026-09-30T06:47:24.052Z"
+    },
+    {
+      "id": "INV-260930-9812",
+      "userId": "usr_default_1",
+      "userName": "MD Rifat",
+      "planName": "Growth Pack (50k Clicks)",
+      "amount": 149,
+      "method": "bKash",
+      "trxId": "BK9X874A92",
+      "status": "Paid",
+      "date": "2026-09-30T10:15:00.000Z"
+    },
+    {
+      "id": "INV-260928-5431",
+      "userId": "usr_mtlsqcg1_rp0tv",
+      "userName": "Alex Morgan",
+      "planName": "Starter Pack (10k Clicks)",
+      "amount": 49,
+      "method": "Nagad",
+      "trxId": "NG7K231P09",
+      "status": "Paid",
+      "date": "2026-09-28T14:22:00.000Z"
+    }
+  ]
+}

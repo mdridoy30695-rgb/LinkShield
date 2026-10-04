@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkShield Pro — Master Admin Control Center</title>
+
+  <!-- Google Fonts: Geist & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><path d='M22 2L6 8.5V19.8C6 30.6 12.8 40.5 22 43C31.2 40.5 38 30.6 38 19.8V8.5L22 2Z' fill='%23f59e0b'/><path d='M22 5.5L9.5 10.8V19.8C9.5 28.5 14.8 36.8 22 39.2C29.2 36.8 34.5 28.5 34.5 19.8V10.8L22 5.5Z' fill='%230f172a'/><circle cx='22' cy='22' r='4' fill='%2338bdf8'/></svg>">
+  <script src="/js/theme.js"></script>
+
+  <style>
+    /* Admin Console Custom Foundations */
+    .admin-body {
+      background-color: var(--neu-bg, #e6ecf4);
+      min-height: 100vh;
+      color: #0f172a;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Secret Gate Screen (Neumorphic Card) */
+    .admin-gate-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .admin-gate-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 28px;
+      padding: 38px 32px 30px;
+      box-shadow: 14px 14px 32px #c5cbd7, -14px -14px 32px #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      text-align: center;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .admin-gate-avatar {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--neu-bg, #e6ecf4);
+      box-shadow: 6px 6px 14px #c5cbd7, -6px -6px 14px #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b45309;
+    }
+
+    .admin-gate-title {
+      font-family: 'Geist', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.4px;
+    }
+
+    .admin-gate-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+
+    /* Shell Layout */
+    .admin-shell {
+      display: flex;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .admin-sidebar {
+      width: 275px;
+      background: var(--neu-bg, #e6ecf4);
+      border-right: 1px solid rgba(197, 203, 215, 0.6);
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 18px;
+      box-shadow: 4px 4px 10px #c5cbd7, -4px -4px 10px #ffffff;
+      margin-bottom: 24px;
+    }
+
+    .admin-brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #b45309, #d97706);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(180, 83, 9, 0.3);
+      flex-shrink: 0;
+    }
+
+    .admin-brand-text h2 {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .admin-brand-text span {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #b45309;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .admin-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .admin-nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border: none;
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 14px;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 3px 3px 8px #c5cbd7, -3px -3px 8px #ffffff;
+      text-align: left;
+    }
+
+    .admin-nav-item button:hover {
+      color: #b45309;
+      transform: translateY(-1px);
+    }
+
+    .admin-nav-item button.active {
+      background: #dfe5ee;
+      color: #b45309;
+      box-shadow: inset 3px 3px 6px #c5cbd7, inset -3px -3px 6px #ffffff;
+      border-left: 4px solid #b45309;
+    }
+
+    .admin-nav-badge {
+      margin-left: auto;
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .admin-content {
+      flex: 1;
+      padding: 32px 36px;
+      overflow-y: auto;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .admin-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(197, 203, 215, 0.6);
+    }
+
+    .admin-topbar-left h1 {
+      font-family: 'Geist', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin: 0 0 4px 0;
+    }
+
+    .admin-topbar-left p {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    /* KPI Grid */
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .admin-stat-card {
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 7px 7px 18px #c5cbd7, -7px -7px 18px #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      position: relative;
+    }
+
+    .admin-stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #b45309, #d97706, #f59e0b);
+      border-radius: 18px 18px 0 0;
+    }
+
+    .admin-stat-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-stat-value {
+      font-family: 'Geist', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    .admin-stat-subtitle {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b45309;
+      margin-top: 3px;
+    }
+
+    .admin-card {
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: 9px 9px 22px #c5cbd7, -9px -9px 22px #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      margin-bottom: 26px;
+      box-sizing: border-box;
+    }
+
+    .admin-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .admin-card-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    /* Modal Overlay */
+    .admin-modal-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .admin-modal-wrap.hidden {
+      display: none;
+    }
+
+    .admin-modal-card {
+      width: 100%;
+      max-width: 540px;
+      background: var(--neu-bg, #e6ecf4);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 16px 16px 36px #c5cbd7, -16px -16px 36px #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      position: relative;
+      box-sizing: border-box;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .admin-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--neu-bg, #e6ecf4);
+      box-shadow: 2px 2px 6px #c5cbd7, -2px -2px 6px #ffffff;
+      border: none;
+      font-size: 13px;
+      font-weight: 900;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .admin-modal-close:hover {
+      color: #ef4444;
+    }
+
+    .admin-view-panel {
+      display: none;
+    }
+
+    .admin-view-panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    /* Live Preview Banner in Settings */
+    .settings-live-preview {
+      background: #0f172a;
+      border-left: 4px solid #f59e0b;
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #f8fafc;
+      font-size: 13px;
+      margin-top: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+    <!-- ================= 1. SECRET GATE: ADMIN LOGIN ================= -->
+  <div id="adminGateScreen" class="auth-modal-wrap">
+    <div class="neu-auth-card">
+      <!-- Admin Avatar Emblem -->
+      <div class="neu-avatar-wrap" style="color: #b45309;">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+        </svg>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h2 class="neu-title">Admin Gate</h2>
+      <p class="neu-subtitle">Master Security Control Panel</p>
+
+      <form id="adminLoginForm">
+        <div class="neu-input-group">
+          <div class="neu-input-wrap">
+            <span class="neu-input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="adminGateEmail" class="neu-input" placeholder="e.g. airana1713@admin" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="neu-input-group">
+          <div class="neu-input-wrap">
+            <span class="neu-input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="adminGatePassword" class="neu-input" placeholder="Enter master password" required autocomplete="current-password">
+            <button type="button" class="neu-eye-toggle" onclick="togglePasswordEye('adminGatePassword')" title="Show/Hide Password">
+              <svg class="eye-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-closed-icon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="neu-btn-submit" id="btnAdminGateSubmit" style="margin-top: 14px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Login Dashboard</span>
+        </button>
+
+        <button type="button" class="neu-btn-bypass" onclick="quickAdminLogin()">
+          <span>⚡ One-Click Master Login</span>
+        </button>
+
+        <div class="neu-footer-switch">
+          <a onclick="alert('Master admin credentials: airana1713@admin / admin')">Forgot password?</a>
+          <span style="margin: 0 6px;">•</span>
+          <a href="/">Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 2. MAIN ADMIN CONSOLE ================= -->
+  <div id="adminConsoleScreen" class="admin-shell" style="display: none;">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div>
+        <div class="admin-brand">
+          <div class="brand-logo-combo">
+            <svg class="brand-shield-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2L6 8.5V19.8C6 30.6 12.8 40.5 22 43C31.2 40.5 38 30.6 38 19.8V8.5L22 2Z" fill="url(#shieldGrad)"/>
+              <path d="M22 5.5L9.5 10.8V19.8C9.5 28.5 14.8 36.8 22 39.2C29.2 36.8 34.5 28.5 34.5 19.8V10.8L22 5.5Z" fill="url(#innerCoreGrad)"/>
+              <path d="M17 19C15.34 19 14 20.34 14 22C14 23.66 15.34 25 17 25H20V22.8H17C16.56 22.8 16.2 22.44 16.2 22C16.2 21.56 16.56 21.2 17 21.2H20V19H17Z" fill="url(#cyberCyan)"/>
+              <path d="M27 19H24V21.2H27C27.44 21.2 27.8 21.56 27.8 22C27.8 22.44 27.44 22.8 27 22.8H24V25H27C28.66 25 30 23.66 30 22C30 20.34 28.66 19 27 19Z" fill="url(#cyberCyan)"/>
+              <rect x="18.5" y="21" width="7" height="2" rx="1" fill="#facc15"/>
+              <circle cx="22" cy="30" r="2.8" fill="#10b981"/>
+            </svg>
+            <div class="admin-brand-text">
+              <h2>LinkShield <span class="brand-pro-badge">PRO</span></h2>
+              <span>Master Admin</span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="admin-nav">
+          <li class="admin-nav-item">
+            <button type="button" class="active" data-admin-view="overview">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              <span>Overview</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="users">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>User Management</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="admins">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>Admins List</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="domains">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>Domains &amp; DNS</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="links">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span>Global Links</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="invoices">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <span>Deposits &amp; Billing</span>
+              <span class="admin-nav-badge" id="pendingInvoicesBadge" style="display: none;">0</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="plans">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <span>Plans &amp; Packages</span>
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button type="button" data-admin-view="settings">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <span>Platform Settings</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="padding: 12px 14px; background: rgba(197, 203, 215, 0.4); border-radius: 14px; margin-bottom: 12px; font-size: 11.5px; color: #475569;">
+          <div>Logged as: <strong id="adminProfileName" style="color: #0f172a;">airana1713</strong></div>
+          <div style="color: #b45309; font-weight: 800; margin-top: 2px;">Role: Super Admin</div>
+        </div>
+        <a href="/" class="admin-btn admin-btn-action" style="width: 100%; margin-bottom: 8px;">
+          <span>🌐 View Public Site</span>
+        </a>
+        <button type="button" class="admin-btn admin-btn-action" style="width: 100%; color: #dc2626;" onclick="adminLogout()">
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="admin-content">
+      
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <h1 id="adminPageHeaderTitle">Overview &amp; System Health</h1>
+          <p id="adminPageHeaderDesc">Real-time status of all users, domains, cloaked links and incoming deposits.</p>
+        </div>
+        <div class="admin-topbar-right">
+          <!-- Theme Switcher -->
+          <button type="button" class="theme-switch-pill" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle Dark/Light Mode">
+            <span class="theme-switch-icon sun-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </span>
+            <span class="theme-switch-icon moon-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-switch-label">Dark</span>
+          </button>
+
+          <div style="display: flex; align-items: center; gap: 8px; padding: 7px 16px; background: var(--neu-bg); border-radius: 20px; box-shadow: 3px 3px 6px #c5cbd7, -3px -3px 6px #ffffff; font-size: 12px; font-weight: 800; color: #15803d;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #15803d;"></span>
+            <span>SYSTEM LIVE</span>
+          </div>
+          <button type="button" class="admin-btn admin-btn-action" onclick="fetchAdminAllData()" title="Refresh Data">
+            <span>🔄 Refresh</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ================= TAB 1: OVERVIEW ================= -->
+      <section id="panel-overview" class="admin-view-panel active">
+        <!-- Stats KPI Grid -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>Total Registered Users</span>
+              <span>👥</span>
+            </div>
+            <div class="admin-stat-value" id="kpiTotalUsers">0</div>
+            <div class="admin-stat-subtitle">Across platform</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>System Admins</span>
+              <span>👑</span>
+            </div>
+            <div class="admin-stat-value" id="kpiTotalAdmins">1</div>
+            <div class="admin-stat-subtitle">Full control room</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>Active Cloaked Links</span>
+              <span>🔗</span>
+            </div>
+            <div class="admin-stat-value" id="kpiTotalLinks">0</div>
+            <div class="admin-stat-subtitle">Anti-Ban Active</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>Human vs Bot Clicks</span>
+              <span>🛡️</span>
+            </div>
+            <div class="admin-stat-value" id="kpiTotalClicks">0</div>
+            <div class="admin-stat-subtitle" id="kpiBotClicks">0 Bots Shielded</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>Configured Domains</span>
+              <span>🌐</span>
+            </div>
+            <div class="admin-stat-value" id="kpiTotalDomains">0</div>
+            <div class="admin-stat-subtitle">DNS Ready</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-title">
+              <span>Pending Deposits</span>
+              <span>💳</span>
+            </div>
+            <div class="admin-stat-value" style="color: #b45309;" id="kpiPendingInvoices">0</div>
+            <div class="admin-stat-subtitle">Awaiting TrxID Check</div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Table -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <h3 class="admin-card-title">Recent Users Registered</h3>
+            <button type="button" class="admin-btn admin-btn-action" onclick="switchAdminTab('users')"><span>Manage All Users →</span></button>
+          </div>
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>USER NAME</th>
+                  <th>EMAIL</th>
+                  <th>ROLE</th>
+                  <th>PLAN / TIER</th>
+                  <th>BALANCE</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="overviewRecentUsersTable">
+                <tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 20px;">Loading data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: USER MANAGEMENT ================= -->
+      <section id="panel-users" class="admin-view-panel">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">All Registered Users</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Full control: change balance, clicks, plan validity duration (days/months), or ban users.</p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <div class="admin-input-wrap" style="width: 250px;">
+                <input type="text" id="adminUserSearchInput" class="admin-input" placeholder="Search by name/email...">
+              </div>
+              <button type="button" class="admin-btn admin-btn-primary" onclick="openCreateUserModal()"><span>+ Add User</span></button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>USER &amp; ID</th>
+                  <th>EMAIL</th>
+                  <th>ROLE</th>
+                  <th>PLAN</th>
+                  <th>VALIDITY</th>
+                  <th>BALANCE</th>
+                  <th>CLICKS LEFT</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: ADMINS ================= -->
+      <section id="panel-admins" class="admin-view-panel">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">System Administrators</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Users with complete administrative and control room access.</p>
+            </div>
+            <button type="button" class="admin-btn admin-btn-primary" onclick="openCreateAdminModal()"><span>+ Add New Admin</span></button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>ADMIN NAME</th>
+                  <th>LOGIN EMAIL / USERNAME</th>
+                  <th>ROLE</th>
+                  <th>SECURITY PRIVILEGES</th>
+                  <th>ADDED DATE</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="adminAdminsTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: DOMAINS & DNS ================= -->
+      <section id="panel-domains" class="admin-view-panel">
+        <!-- DNS Instructions Box -->
+        <div class="dns-instruction-box">
+          <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Custom Domain &amp; Wildcard Subdomain DNS Configuration</span>
+          </h4>
+          <p>To connect any domain to LinkShield Pro, configure these DNS records in Cloudflare, GoDaddy, or Namecheap:</p>
+          <div style="margin-top: 10px;">
+            <span class="dns-record-badge">A Record: @ ➔ <span id="dnsTargetIpDisplay">127.0.0.1</span></span>
+            <span class="dns-record-badge">A Record: * (Wildcard) ➔ <span id="dnsTargetIpDisplay2">127.0.0.1</span></span>
+            <span class="dns-record-badge">CNAME: www ➔ linkshield.pro</span>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">Domain Network Control</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Manage platform domains, VIP restrictions, and wildcard routing live.</p>
+            </div>
+            <button type="button" class="admin-btn admin-btn-primary" onclick="openCreateDomainModal()"><span>+ Add New Domain</span></button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>DOMAIN NAME</th>
+                  <th>DNS TARGET</th>
+                  <th>AVAILABILITY</th>
+                  <th>STATUS</th>
+                  <th>LINKS USING</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="adminDomainsTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: GLOBAL LINKS ================= -->
+      <section id="panel-links" class="admin-view-panel">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">All Short Links Across Platform</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Inspect links created by all members, filter spam or de-activate offers.</p>
+            </div>
+            <div class="admin-input-wrap" style="width: 280px;">
+              <input type="text" id="adminLinkSearchInput" class="admin-input" placeholder="Search slugs or target URLs...">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>SHORT SLUG</th>
+                  <th>TARGET URL</th>
+                  <th>CREATOR</th>
+                  <th>CLOAK MODE</th>
+                  <th>CLICKS</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="adminLinksTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: DEPOSITS & INVOICES ================= -->
+      <section id="panel-invoices" class="admin-view-panel">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">Deposit &amp; Payment Verifications</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Review manual bKash/Nagad TrxIDs. Approving will automatically credit clicks and balance live!</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="shield-table">
+              <thead>
+                <tr>
+                  <th>INVOICE ID</th>
+                  <th>USER</th>
+                  <th>SENDER NUMBER</th>
+                  <th>PLAN / PURPOSE</th>
+                  <th>AMOUNT (BDT)</th>
+                  <th>GATEWAY</th>
+                  <th>TRX ID</th>
+                  <th>DATE</th>
+                  <th>STATUS</th>
+                  <th>VERIFY ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="adminInvoicesTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: PLANS & PACKAGES ================= -->
+      <section id="panel-plans" class="admin-view-panel">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">Dynamic Subscription Plans</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Create, edit or delete pricing plans. All plans sync live across user dashboards.</p>
+            </div>
+            <button type="button" class="admin-btn admin-btn-primary" onclick="openAdminPlanModal()">
+              <span>+ Create New Plan</span>
+            </button>
+          </div>
+
+          <div class="admin-plans-grid" id="adminPlansListContainer">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 7: SETTINGS ================= -->
+      <section id="panel-settings" class="admin-view-panel">
+        <div class="admin-card" style="max-width: 720px;">
+          <div class="admin-card-head">
+            <div>
+              <h3 class="admin-card-title">Global Platform Configuration</h3>
+              <p style="font-size: 12px; color: #64748b; margin-top: 2px;">All changes update the entire server and user dashboard immediately.</p>
+            </div>
+          </div>
+
+          <form id="adminSettingsForm">
+            <!-- Platform Name -->
+            <div style="margin-bottom: 20px;">
+              <label class="admin-label">
+                <span>Platform Name</span>
+                <span class="hint">Shown on headers, titles &amp; emails</span>
+              </label>
+              <div class="admin-input-wrap">
+                <input type="text" id="settingAppName" class="admin-input" value="LinkShield Pro" required>
+              </div>
+            </div>
+
+            <!-- Primary Host -->
+            <div style="margin-bottom: 20px;">
+              <label class="admin-label">
+                <span>Primary Host / Server Domain</span>
+                <span class="hint">Main URL where dashboard runs</span>
+              </label>
+              <div class="admin-input-wrap">
+                <input type="text" id="settingPrimaryHost" class="admin-input" value="localhost:4000" required>
+              </div>
+            </div>
+
+            <!-- Announcement Notice Banner -->
+            <div style="margin-bottom: 20px;">
+              <label class="admin-label">
+                <span>Global Announcement Banner Notice</span>
+                <span class="hint">Appears at the top of every user's dashboard</span>
+              </label>
+              <div class="admin-input-wrap">
+                <input type="text" id="settingNoticeText" class="admin-input" value="⚡ Welcome to LinkShield Pro Anti-Ban Network! 100% Facebook Cloaking Active.">
+              </div>
+              <div class="settings-live-preview" id="settingNoticePreview">
+                ⚡ Welcome to LinkShield Pro Anti-Ban Network! 100% Facebook Cloaking Active.
+              </div>
+            </div>
+
+            <!-- Payment Gateways (bKash, Nagad, Rocket) -->
+            <div style="background: rgba(245, 158, 11, 0.06); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 14px; padding: 16px; margin-bottom: 22px;">
+              <h4 style="margin: 0 0 12px 0; font-size: 13.5px; font-weight: 900; color: #b45309;">
+                📱 Manual Payment Gateway Numbers (Send Money)
+              </h4>
+              <div class="form-row-2col" style="margin-bottom: 12px;">
+                <div>
+                  <label class="admin-label">bKash Personal / Merchant</label>
+                  <div class="admin-input-wrap">
+                    <input type="text" id="settingBkashNumber" class="admin-input" value="01952320805">
+                  </div>
+                </div>
+                <div>
+                  <label class="admin-label">Nagad Personal / Merchant</label>
+                  <div class="admin-input-wrap">
+                    <input type="text" id="settingNagadNumber" class="admin-input" value="01952320805">
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <label class="admin-label">Rocket Personal Number</label>
+                <div class="admin-input-wrap">
+                  <input type="text" id="settingRocketNumber" class="admin-input" value="01952320805">
+                </div>
+              </div>
+              <div>
+                <label class="admin-label">Payment Instructions Note</label>
+                <div class="admin-input-wrap">
+                  <input type="text" id="settingPaymentInstructions" class="admin-input" value="Send exact money via Send Money, then copy and paste the TrxID.">
+                </div>
+              </div>
+            </div>
+
+            <!-- Support Contacts -->
+            <div class="form-row-2col" style="margin-bottom: 20px;">
+              <div>
+                <label class="admin-label">Support WhatsApp / Phone</label>
+                <div class="admin-input-wrap">
+                  <input type="text" id="settingSupportPhone" class="admin-input" value="+8801952320805">
+                </div>
+              </div>
+              <div>
+                <label class="admin-label">Support Email</label>
+                <div class="admin-input-wrap">
+                  <input type="email" id="settingSupportEmail" class="admin-input" value="support@linkshield.pro">
+                </div>
+              </div>
+            </div>
+
+            <!-- Default Free Clicks -->
+            <div style="margin-bottom: 26px;">
+              <label class="admin-label">Default Free Registration Clicks</label>
+              <div class="admin-input-wrap">
+                <input type="number" id="settingDefaultClicks" class="admin-input" value="1000">
+              </div>
+            </div>
+
+            <button type="submit" class="admin-btn admin-btn-primary" style="height: 46px; padding: 0 28px; font-size: 14px;">
+              <span>💾 Save Platform Settings Live</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= EDIT USER MODAL ================= -->
+  <div id="adminEditUserModal" class="admin-modal-wrap hidden">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeAdminModal('adminEditUserModal')">✕</button>
+      <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 18px 0;">Edit User Account</h3>
+
+      <form id="adminEditUserForm">
+        <input type="hidden" id="editUserId">
+
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Full Name</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="editUserName" class="admin-input" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Email Address</label>
+          <div class="admin-input-wrap">
+            <input type="email" id="editUserEmail" class="admin-input" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Reset Password <span class="hint">(Leave blank to keep current)</span></label>
+          <div class="admin-input-wrap">
+            <input type="password" id="editUserPassword" class="admin-input" placeholder="Enter new password">
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 14px;">
+          <div>
+            <label class="admin-label">Role</label>
+            <div class="admin-input-wrap">
+              <select id="editUserRole" class="admin-input admin-select">
+                <option value="user">Standard User</option>
+                <option value="admin">Administrator 👑</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">Account Status</label>
+            <div class="admin-input-wrap">
+              <select id="editUserStatus" class="admin-input admin-select">
+                <option value="Active">Active ●</option>
+                <option value="Suspended">Suspended / Banned ⛔</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 14px;">
+          <div>
+            <label class="admin-label">Tier / Plan</label>
+            <div class="admin-input-wrap">
+              <select id="editUserTier" class="admin-input admin-select">
+                <option value="FREE TIER">FREE TIER</option>
+                <option value="STARTER PACK">STARTER PACK (10k Clicks)</option>
+                <option value="GROWTH PACK">GROWTH PACK (50k Clicks)</option>
+                <option value="VIP ENTERPRISE">VIP ENTERPRISE (Unlimited)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">Wallet Balance (BDT)</label>
+            <div class="admin-input-wrap">
+              <input type="number" step="0.01" id="editUserBalance" class="admin-input">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 22px;">
+          <div>
+            <label class="admin-label">Remaining Clicks</label>
+            <div class="admin-input-wrap">
+              <input type="number" id="editUserClicks" class="admin-input">
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">Plan Duration (Days)</label>
+            <div class="admin-input-wrap">
+              <select id="editUserDurationSelect" class="admin-input admin-select" onchange="applyDurationPreset(this.value)">
+                <option value="7">7 Days</option>
+                <option value="15">15 Days</option>
+                <option value="30" selected>1 Month (30 Days)</option>
+                <option value="60">2 Months (60 Days)</option>
+                <option value="90">3 Months (90 Days)</option>
+                <option value="180">6 Months (180 Days)</option>
+                <option value="365">1 Year (365 Days)</option>
+                <option value="custom">Custom Days</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" class="admin-btn admin-btn-primary" style="flex: 1; height: 44px;">
+            <span>Save All Changes</span>
+          </button>
+          <button type="button" class="admin-btn admin-btn-action" style="height: 44px;" onclick="closeAdminModal('adminEditUserModal')">
+            <span>Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD ADMIN MODAL ================= -->
+  <div id="adminCreateAdminModal" class="admin-modal-wrap hidden">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeAdminModal('adminCreateAdminModal')">✕</button>
+      <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 18px 0;">👑 Add New System Admin</h3>
+
+      <form id="adminCreateAdminForm">
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Admin Full Name</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="newAdminName" class="admin-input" placeholder="e.g. Operations Manager" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Admin Email or Login ID</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="newAdminEmail" class="admin-input" placeholder="e.g. admin2@linkshield.pro" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 22px;">
+          <label class="admin-label">Password</label>
+          <div class="admin-input-wrap">
+            <input type="password" id="newAdminPassword" class="admin-input" placeholder="Set secure password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; height: 44px;">
+          <span>Create Administrator</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD DOMAIN MODAL ================= -->
+  <div id="adminCreateDomainModal" class="admin-modal-wrap hidden">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeAdminModal('adminCreateDomainModal')">✕</button>
+      <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 18px 0;">🌐 Add Domain with DNS Record</h3>
+
+      <form id="adminCreateDomainForm">
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Domain Name</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="newDomainName" class="admin-input" placeholder="e.g. smartdeals.link" required>
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 14px;">
+          <div>
+            <label class="admin-label">DNS Record Type</label>
+            <div class="admin-input-wrap">
+              <select id="newDomainDnsType" class="admin-input admin-select">
+                <option value="A Record">A Record (@ ➔ IP)</option>
+                <option value="CNAME">CNAME (➔ Host)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">DNS Target / IP</label>
+            <div class="admin-input-wrap">
+              <input type="text" id="newDomainDnsTarget" class="admin-input" value="127.0.0.1" required>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 22px;">
+          <label class="admin-label">User Plan Restriction</label>
+          <div class="admin-input-wrap">
+            <select id="newDomainTier" class="admin-input admin-select">
+              <option value="all">Available for All Users (Free &amp; Paid)</option>
+              <option value="vip">Locked for VIP / Paid Plans Only</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; height: 44px;">
+          <span>Add Domain to Live Network</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT PLAN MODAL ================= -->
+  <div id="adminPlanModal" class="admin-modal-wrap hidden">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeAdminModal('adminPlanModal')">✕</button>
+      <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 18px 0;" id="adminPlanModalTitle">✨ Plan Configuration</h3>
+
+      <form id="adminPlanForm">
+        <input type="hidden" id="planFormId">
+
+        <div style="margin-bottom: 14px;">
+          <label class="admin-label">Plan Name</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="planFormName" class="admin-input" placeholder="e.g. VIP Enterprise" required>
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 14px;">
+          <div>
+            <label class="admin-label">Price (BDT)</label>
+            <div class="admin-input-wrap">
+              <input type="number" id="planFormPrice" class="admin-input" placeholder="149" min="0" required>
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">Clicks Quota</label>
+            <div class="admin-input-wrap">
+              <input type="number" id="planFormClicks" class="admin-input" placeholder="50000" min="1" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-2col" style="margin-bottom: 14px;">
+          <div>
+            <label class="admin-label">Validity (Days)</label>
+            <div class="admin-input-wrap">
+              <input type="number" id="planFormDays" class="admin-input" placeholder="30" min="1" required>
+            </div>
+          </div>
+          <div>
+            <label class="admin-label">Max Short Links Allowed</label>
+            <div class="admin-input-wrap">
+              <input type="number" id="planFormMaxLinks" class="admin-input" placeholder="25" min="1" required>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <label class="admin-label">Badge Label (Optional)</label>
+          <div class="admin-input-wrap">
+            <input type="text" id="planFormBadge" class="admin-input" placeholder="POPULAR / VIP / PRO">
+          </div>
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; height: 44px;">
+          <span id="btnSubmitPlanText">Save Plan Live</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/cyber-shield.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
