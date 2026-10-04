@@ -510,14 +510,13 @@ function renderAllLinks(links) {
 
   tbody.innerHTML = links.map(l => {
     const fullShortUrl = `${host}/${l.slug}`;
-    const displayBrandedUrl = `https://${l.subdomain ? l.subdomain + '.' : ''}${l.domainName || 'linkshield.pro'}/${l.slug}`;
 
     return `
       <tr>
         <td>
           <div class="table-url-cell">
-            <span class="table-short-url">${escapeHtml(displayBrandedUrl)}</span>
-            <small style="color: var(--muted2); font-size: 11px;">Node: /${escapeHtml(l.slug)}</small>
+            <span class="table-short-url" style="color: #b45309; font-weight: 700;">${escapeHtml(fullShortUrl)}</span>
+            <small style="color: var(--muted); font-size: 11px;">Slug: /${escapeHtml(l.slug)}</small>
           </div>
         </td>
         <td>
@@ -672,15 +671,25 @@ function populateDomainDropdown(domains) {
   const select = document.getElementById('selectDomain');
   if (!select) return;
 
-  if (!domains || domains.length === 0) {
-    const currentHost = window.location.host || 'localhost:4000';
-    select.innerHTML = `<option value="domain_local">${currentHost}</option>`;
-    return;
+  const currentHost = window.location.host || 'localhost:4000';
+  const isNetlify = currentHost.includes('netlify.app');
+  const label = isNetlify ? `⭐ Netlify Live Domain (${currentHost})` : `⭐ Live Hosting Domain (${currentHost})`;
+
+  let optionsHtml = `
+    <option value="current_host" selected>${label} [Active &amp; Ready]</option>
+  `;
+
+  if (domains && domains.length > 0) {
+    optionsHtml += `<optgroup label="Additional Network Domains">`;
+    domains.forEach(d => {
+      if (d.domain && d.domain.toLowerCase() !== currentHost.toLowerCase()) {
+        optionsHtml += `<option value="${d.id}">${escapeHtml(d.domain)}</option>`;
+      }
+    });
+    optionsHtml += `</optgroup>`;
   }
 
-  select.innerHTML = domains.map((d, idx) => `
-    <option value="${d.id}" ${idx === 0 ? 'selected' : ''}>${escapeHtml(d.domain)}</option>
-  `).join('');
+  select.innerHTML = optionsHtml;
 }
 
 // 10. Render Invoices
@@ -1046,14 +1055,16 @@ function showLinkCreatedModal(link) {
   const copyBtn = document.getElementById('modalCopyBtn');
 
   const localFull = `${window.location.origin}/${link.slug}`;
-  const brandedFull = `https://${link.subdomain ? link.subdomain + '.' : ''}${link.domainName || 'linkshield.pro'}/${link.slug}`;
 
-  if (shortUrlEl) shortUrlEl.textContent = brandedFull;
+  if (shortUrlEl) shortUrlEl.textContent = localFull;
   if (targetUrlEl) targetUrlEl.textContent = `Target: ${link.targetUrl}`;
   if (visitBtn) visitBtn.href = localFull;
 
   if (copyBtn) {
-    copyBtn.onclick = () => copyToClipboard(localFull);
+    copyBtn.onclick = () => {
+      copyToClipboard(localFull);
+      showQuickNotification(`Copied: ${localFull}`);
+    };
   }
 
   if (modal) modal.classList.add('open');

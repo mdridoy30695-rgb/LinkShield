@@ -19,13 +19,13 @@
       "clicks": 500,
       "price": 0,
       "durationDays": 7,
-      "maxLinks": 1,
+      "maxLinks": 5,
       "isFree": true,
       "isActive": true,
       "badge": "FREE PACK",
       "features": [
         "500 Visitor Clicks",
-        "1 Active Short Link",
+        "5 Active Short Links",
         "7 Days Validity",
         "Realtime Analytics",
         "Anti-Ban Facebook Shield"
@@ -139,6 +139,25 @@
     }
   ],
   "links": [
+    {
+      "id": "link_mutvpz30_bzsvt",
+      "userId": "usr_mutvpz2j_zjyxs",
+      "slug": "aEXsYA",
+      "subdomain": "aEXsYA",
+      "targetUrl": "https://google.com",
+      "title": "Special Offer Deal",
+      "description": "Click here to view verified promotion details.",
+      "imageUrl": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80",
+      "domainId": "current_host",
+      "redirectMode": "smart_shield",
+      "bridgeDelay": 0,
+      "isActive": true,
+      "clicks": 0,
+      "todayClicks": 0,
+      "yesterdayClicks": 0,
+      "createdAt": "2026-10-04T13:51:19.260Z",
+      "updatedAt": "2026-10-04T13:51:19.260Z"
+    },
     {
       "id": "link_mushtw8e_pe33z",
       "userId": "usr_mushtw7q_otb3b",
@@ -450,6 +469,72 @@
         "expiresAt": "2026-11-09T14:45:53.672Z"
       },
       "createdAt": "2026-10-03T14:45:53.672Z"
+    },
+    {
+      "id": "usr_mutvh47c_vhe4z",
+      "name": "Shakil Ahmed",
+      "email": "shakil1791121465717@gmail.com",
+      "password": "password123",
+      "role": "user",
+      "tier": "FREE TIER",
+      "avatarInitials": "SA",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Welcome Gift",
+        "clicksLeft": 500,
+        "usedClicks": 0,
+        "clicksLimit": 500,
+        "maxLinks": 1,
+        "durationDays": 7,
+        "purchasedAt": "2026-10-04T13:44:25.992Z",
+        "expiresAt": "2026-10-11T13:44:25.992Z"
+      },
+      "createdAt": "2026-10-04T13:44:25.992Z"
+    },
+    {
+      "id": "usr_mutvi6u6_wfr4d",
+      "name": "New Member",
+      "email": "usr_guest_516060@linkshield.pro",
+      "password": "guest1234",
+      "role": "user",
+      "tier": "FREE TIER",
+      "avatarInitials": "NM",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Welcome Gift",
+        "clicksLeft": 500,
+        "usedClicks": 0,
+        "clicksLimit": 500,
+        "maxLinks": 1,
+        "durationDays": 7,
+        "purchasedAt": "2026-10-04T13:45:16.062Z",
+        "expiresAt": "2026-10-11T13:45:16.062Z"
+      },
+      "createdAt": "2026-10-04T13:45:16.062Z"
+    },
+    {
+      "id": "usr_mutvpz2j_zjyxs",
+      "name": "Netlify Tester",
+      "email": "net1791121879242@gmail.com",
+      "password": "pass1234",
+      "role": "user",
+      "tier": "FREE TIER",
+      "avatarInitials": "NT",
+      "walletBalance": 0,
+      "status": "Active",
+      "activePlan": {
+        "name": "Welcome Gift",
+        "clicksLeft": 500,
+        "usedClicks": 0,
+        "clicksLimit": 500,
+        "maxLinks": 5,
+        "durationDays": 7,
+        "purchasedAt": "2026-10-04T13:51:19.243Z",
+        "expiresAt": "2026-10-11T13:51:19.243Z"
+      },
+      "createdAt": "2026-10-04T13:51:19.243Z"
     }
   ],
   "invoices": [

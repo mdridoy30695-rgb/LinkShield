@@ -262,7 +262,7 @@ const db = {
         clicksLeft: 500,
         usedClicks: 0,
         clicksLimit: 500,
-        maxLinks: 1,
+        maxLinks: 5,
         durationDays: 7,
         purchasedAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString()
@@ -327,18 +327,29 @@ const db = {
 
   getLinkBySlug(slug, hostname = '') {
     const data = readDB();
-    const cleanSlug = slug.toLowerCase().trim();
-    
-    return data.links.find(l => {
+    const cleanSlug = (slug || '').toLowerCase().trim();
+    if (!cleanSlug) return null;
+
+    // 1. First priority: match exact active link with matching host
+    const directMatch = data.links.find(l => {
       if (l.slug.toLowerCase() !== cleanSlug || !l.isActive) return false;
-      if (l.domainId === 'all' || !l.domainId) return true;
+      if (l.domainId === 'all' || l.domainId === 'current_host' || !l.domainId) return true;
 
       const dom = data.domains.find(d => d.id === l.domainId);
       if (!dom) return true;
-      const cleanHost = hostname.split(':')[0].toLowerCase();
+      const cleanHost = (hostname || '').split(':')[0].toLowerCase();
       const domHost = dom.domain.split(':')[0].toLowerCase();
-      return cleanHost === domHost || cleanHost === 'localhost' || cleanHost === '127.0.0.1';
-    }) || null;
+      return cleanHost === domHost ||
+             cleanHost === 'localhost' ||
+             cleanHost === '127.0.0.1' ||
+             cleanHost.endsWith('.netlify.app') ||
+             cleanHost.endsWith('.onrender.com');
+    });
+
+    if (directMatch) return directMatch;
+
+    // 2. Resilient fallback: Any active link matching slug on the current deployment
+    return data.links.find(l => l.slug.toLowerCase() === cleanSlug && l.isActive) || null;
   },
 
   createLink(linkData) {
@@ -364,13 +375,13 @@ const db = {
 
     // Active domain validation
     const activeDomains = (data.domains || []).filter(d => d.status === 'active');
-    let domainId = linkData.domainId || 'all';
-    if (domainId !== 'all') {
+    let domainId = linkData.domainId || 'current_host';
+    if (domainId !== 'all' && domainId !== 'current_host') {
       const match = activeDomains.find(d => d.id === domainId || d.domain.toLowerCase() === domainId.toLowerCase());
       if (match) {
         domainId = match.id;
-      } else if (activeDomains.length > 0) {
-        domainId = activeDomains[0].id;
+      } else {
+        domainId = 'current_host';
       }
     }
 
