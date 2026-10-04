@@ -433,7 +433,7 @@ function renderLinksTable(filter = '') {
       <td>
         <div style="display: flex; align-items: center; gap: 6px;">
           <strong style="color: #b45309; font-size: 13.5px;">/${escapeHtml(l.slug)}</strong>
-          <button type="button" class="admin-btn admin-btn-action" style="padding: 3px 8px; font-size: 10.5px;" onclick="copyText('http://localhost:4000/${l.slug}')">Copy</button>
+          <button type="button" class="admin-btn admin-btn-action" style="padding: 3px 8px; font-size: 10.5px;" onclick="copyText(`${window.location.origin}/${escapeHtml(l.slug)}`)">Copy</button>
         </div>
       </td>
       <td>

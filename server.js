@@ -13,6 +13,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Support Netlify Functions route rewriting
+app.use((req, res, next) => {
+  if (req.url.startsWith('/.netlify/functions/server')) {
+    req.url = req.url.replace('/.netlify/functions/server', '') || '/';
+  }
+  next();
+});
+
 // Serve static assets directly from public
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use('/public', express.static(path.resolve(__dirname, 'public')));
@@ -697,11 +705,15 @@ app.get('/:slug', (req, res, next) => {
   return res.redirect(302, link.targetUrl);
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🛡️ LinkShield Pro - Facebook Anti-Ban URL Shortener`);
-  console.log(`🚀 Server running on: http://localhost:${PORT}`);
-  console.log(`📊 Dashboard accessible at: http://localhost:${PORT}/`);
-  console.log(`=======================================================`);
-});
+// Start Server (when run directly or locally)
+if (require.main === module || (!process.env.NETLIFY && !process.env.AWS_LAMBDA_FUNCTION_NAME)) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🛡️ LinkShield Pro - Facebook Anti-Ban URL Shortener`);
+    console.log(`🚀 Server running on: http://localhost:${PORT}`);
+    console.log(`📊 Dashboard accessible at: http://localhost:${PORT}/`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;

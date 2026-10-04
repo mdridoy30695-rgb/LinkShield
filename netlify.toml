@@ -1,0 +1,42 @@
+[build]
+  functions = "netlify/functions"
+  publish = "public"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["data/**", "views/**", "public/**"]
+
+# API endpoints
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/api/:splat"
+  status = 200
+
+# Admin portal direct routes
+[[redirects]]
+  from = "/airana1713@admin"
+  to = "/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# Dashboard route
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+# Root homepage
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Catch-all short link slugs routed to serverless function
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200

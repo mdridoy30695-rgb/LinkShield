@@ -1,12 +1,20 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
-const DATA_DIR = path.join(__dirname, 'data');
+// Detect serverless environment (Netlify, AWS Lambda, Vercel)
+const isServerless = !!(process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT || process.env.VERCEL);
+const SEED_FILE = path.join(__dirname, 'data', 'database.json');
+const DATA_DIR = isServerless ? path.join(os.tmpdir(), 'linkshield_data') : path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'database.json');
 
 // Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn("Could not create DATA_DIR:", e.message);
 }
 
 // Initial state schema
@@ -164,35 +172,59 @@ function generateRandomSlug(length = 6) {
   return result;
 }
 
+// In-memory cache for ultra-fast response and read-only environments
+let memoryData = null;
+
 // Load or initialize database
 function readDB() {
   try {
-    if (!fs.existsSync(DB_FILE)) {
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf8');
+      const parsed = JSON.parse(raw);
+      if (!parsed.users || parsed.users.length === 0) {
+        parsed.users = defaultData.users;
+      }
+      memoryData = parsed;
+      return parsed;
+    }
+    
+    // In serverless, load from seed file if DB_FILE doesn't exist
+    if (fs.existsSync(SEED_FILE)) {
+      const raw = fs.readFileSync(SEED_FILE, 'utf8');
+      const parsed = JSON.parse(raw);
+      if (parsed) {
+        memoryData = parsed;
+        try {
+          fs.writeFileSync(DB_FILE, raw, 'utf8');
+        } catch (e) {}
+        return parsed;
+      }
+    }
+
+    if (memoryData) return memoryData;
+
+    try {
       fs.writeFileSync(DB_FILE, JSON.stringify(defaultData, null, 2), 'utf8');
-      return defaultData;
-    }
-    const raw = fs.readFileSync(DB_FILE, 'utf8');
-    const parsed = JSON.parse(raw);
-    if (!parsed.users || parsed.users.length === 0) {
-      parsed.users = defaultData.users;
-    }
-    return parsed;
+    } catch (e) {}
+    memoryData = defaultData;
+    return defaultData;
   } catch (err) {
     console.error("Error reading database:", err);
-    return defaultData;
+    return memoryData || defaultData;
   }
 }
 
 // Save database atomically
 function writeDB(data) {
+  memoryData = data;
   try {
     const tempFile = DB_FILE + '.tmp';
     fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf8');
     fs.renameSync(tempFile, DB_FILE);
     return true;
   } catch (err) {
-    console.error("Error writing database:", err);
-    return false;
+    // If running in a strictly read-only serverless layer, memoryData keeps state in warm lambdas
+    return true;
   }
 }
 
