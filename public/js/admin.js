@@ -97,9 +97,15 @@ function showAdminConsole() {
 }
 
 window.quickAdminLogin = function() {
-  document.getElementById('adminGateEmail').value = 'airana1713@admin';
-  document.getElementById('adminGatePassword').value = 'admin';
-  document.getElementById('adminLoginForm').dispatchEvent(new Event('submit'));
+  const emailEl = document.getElementById('adminGateEmail');
+  const passEl = document.getElementById('adminGatePassword');
+  if (emailEl) emailEl.value = 'admin';
+  if (passEl) passEl.value = 'admin';
+  const form = document.getElementById('adminLoginForm');
+  if (form) {
+    if (form.requestSubmit) form.requestSubmit();
+    else form.dispatchEvent(new Event('submit'));
+  }
 };
 
 window.adminLogout = function() {

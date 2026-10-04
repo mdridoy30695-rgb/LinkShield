@@ -1393,3 +1393,25 @@ function escapeHtml(str) {
     }[tag] || tag)
   );
 }
+
+// 1-Click Authority Cloak Presets for Facebook / Social anti-ban
+window.applyAuthorityPreset = function(type) {
+  const titleInput = document.getElementById('inputOgTitle');
+  const imgInput = document.getElementById('inputOgImage');
+  const radioSmart = document.querySelector('input[name="redirectMode"][value="smart_shield"]');
+  if (radioSmart) radioSmart.checked = true;
+
+  if (type === 'google_docs') {
+    if (titleInput) titleInput.value = 'Google Docs — Shared & Verified Online Document';
+    if (imgInput) imgInput.value = 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=1200&h=630&q=80';
+    showQuickNotification('✓ Applied Google Docs authority anti-ban preset!');
+  } else if (type === 'google_play') {
+    if (titleInput) titleInput.value = 'Google Play Store — Official Verified Application';
+    if (imgInput) imgInput.value = 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80';
+    showQuickNotification('✓ Applied Google Play store anti-ban preset!');
+  } else if (type === 'cpa_offer') {
+    if (titleInput) titleInput.value = '🔥 Exclusive High-Converting Deal — 50% Off Limited Time';
+    if (imgInput) imgInput.value = 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&h=630&q=80';
+    showQuickNotification('✓ Applied High-Converting CPA Deal preset!');
+  }
+};

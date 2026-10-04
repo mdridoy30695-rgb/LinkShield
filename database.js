@@ -26,6 +26,48 @@ const defaultData = {
   },
   users: [
     {
+      id: "admin_airana_1713",
+      name: "Super Admin",
+      email: "airana1713@admin",
+      phone: "01952320805",
+      password: "admin",
+      role: "admin",
+      tier: "SUPER ADMIN",
+      avatarInitials: "SA",
+      walletBalance: 0.00,
+      activePlan: {
+        name: "Super Admin",
+        clicksLeft: 9999999,
+        usedClicks: 0,
+        clicksLimit: 9999999,
+        freeClicks: 0,
+        emergencyClicks: 0,
+        purchasedAt: new Date().toISOString()
+      },
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "admin_master_quick",
+      name: "Master Admin",
+      email: "admin",
+      phone: "01952320805",
+      password: "admin",
+      role: "admin",
+      tier: "SUPER ADMIN",
+      avatarInitials: "AD",
+      walletBalance: 0.00,
+      activePlan: {
+        name: "Super Admin",
+        clicksLeft: 9999999,
+        usedClicks: 0,
+        clicksLimit: 9999999,
+        freeClicks: 0,
+        emergencyClicks: 0,
+        purchasedAt: new Date().toISOString()
+      },
+      createdAt: new Date().toISOString()
+    },
+    {
       id: "usr_default_1",
       name: "MD Rifat",
       email: "mdrifat1234gsh@gmail.com",
@@ -747,7 +789,8 @@ const db = {
       id: u.id,
       name: u.name,
       email: u.email,
-      role: u.role || (u.email === 'airana1713@admin' ? 'admin' : 'user'),
+      password: u.password,
+      role: u.role || (u.email === 'airana1713@admin' || u.email === 'admin' ? 'admin' : 'user'),
       tier: u.tier || 'FREE TIER',
       walletBalance: (u.walletBalance !== undefined ? u.walletBalance : 0.00),
       clicksLeft: (u.activePlan && u.activePlan.clicksLeft !== undefined) ? u.activePlan.clicksLeft : 1000,

@@ -431,26 +431,27 @@ app.post('/api/admin/login', (req, res) => {
     }
 
     const users = db.getAllUsers();
-    // Allow login if airana1713@admin or any user with role === 'admin'
+    // Allow login if airana1713@admin, admin, or any user with role === 'admin'
     const admin = users.find(u => 
-      (u.email.toLowerCase() === email || (email === 'airana1713' && u.email === 'airana1713@admin')) &&
+      (u.email.toLowerCase() === email || (email === 'airana1713' && u.email === 'airana1713@admin') || (email === 'admin' && (u.role === 'admin' || u.email === 'airana1713@admin'))) &&
       u.role === 'admin'
     );
 
-    // Default master admin fallback
-    if (email === 'airana1713@admin' || email === 'airana1713') {
-      if (password === 'admin' || (admin && admin.password === password)) {
-        return res.json({
-          success: true,
-          admin: {
-            id: admin ? admin.id : 'admin_airana_1713',
-            name: admin ? admin.name : 'Super Admin (Airana)',
-            email: 'airana1713@admin',
-            role: 'admin',
-            tier: 'SUPER ADMIN'
-          }
-        });
-      }
+    // Universal master admin credentials (admin / admin or airana1713@admin / admin)
+    const isMasterUser = email === 'admin' || email === 'airana1713@admin' || email === 'airana1713' || email === 'admin@admin' || email === 'admin@linkshield.pro';
+    const isMasterPass = password === 'admin' || password === 'admin1234' || (admin && admin.password === password);
+
+    if (isMasterUser && isMasterPass) {
+      return res.json({
+        success: true,
+        admin: {
+          id: admin ? admin.id : 'admin_airana_1713',
+          name: admin ? admin.name : 'Super Admin',
+          email: 'admin@linkshield.pro',
+          role: 'admin',
+          tier: 'SUPER ADMIN'
+        }
+      });
     }
 
     if (!admin) {
